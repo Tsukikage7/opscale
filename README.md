@@ -38,13 +38,10 @@ npx skills add Tsukikage7/opscale --skill opscale --agent claude-code --global -
 npx skills add Tsukikage7/opscale --skill opscale --agent cursor --global --yes
 ```
 
-Chinese skill:
-
-```bash
-npx skills add Tsukikage7/opscale --skill opscale-zh-cn --agent codex --global --yes
-```
-
 For project-local installation, omit `--global`.
+
+Opscale ships one skill. It answers in the user's language, so separate English
+and Chinese skill packages are not needed.
 
 ## Install The CLI
 
@@ -52,7 +49,7 @@ The skill calls the `opscale` CLI to query databases. Without a global install:
 
 ```bash
 npx opscale@latest drivers
-npx opscale@latest schema
+npx opscale@latest config init
 ```
 
 Or install it globally:
@@ -60,19 +57,40 @@ Or install it globally:
 ```bash
 npm install -g opscale
 opscale drivers
-opscale schema
+opscale config init
 ```
 
 ## Connect A Database
 
-Use a read-only database account. Do not paste production credentials into chat;
-configure them in your local shell or secret manager.
+Use a read-only database account. Do not paste production credentials into chat.
+
+Recommended setup:
 
 ```bash
-export OPSCALE_DSN='postgres://readonly_user:password@host:5432/database?sslmode=require'
-export OPSCALE_SCHEMAS='public'
-export OPSCALE_MAX_ROWS='100'
-export OPSCALE_TIMEOUT_MS='10000'
+npx opscale@latest config init
+```
+
+The command prompts locally for:
+
+```text
+Database DSN
+Schemas
+Max rows
+Timeout ms
+```
+
+It saves the config on your machine:
+
+```text
+~/.opscale/config.json
+```
+
+The AI assistant does not need to see your database password.
+
+You can inspect the saved config with the password redacted:
+
+```bash
+npx opscale@latest config show
 ```
 
 Then verify schema access:
@@ -96,6 +114,23 @@ The agent will:
 3. write read-only SQL;
 4. run the query;
 5. return the result, SQL, and assumptions.
+
+If the database is not configured, the agent should ask you to run this locally:
+
+```bash
+npx opscale@latest config init
+```
+
+It should not ask you to paste database credentials into chat.
+
+Advanced users can still use environment variables. They override the local config:
+
+```bash
+export OPSCALE_DSN='postgres://readonly_user:password@host:5432/database?sslmode=require'
+export OPSCALE_SCHEMAS='public'
+export OPSCALE_MAX_ROWS='100'
+export OPSCALE_TIMEOUT_MS='10000'
+```
 
 ## Supported Databases
 
@@ -127,21 +162,18 @@ pnpm run verify
 
 Repository layout:
 
-- `skills/opscale`: English skill.
-- `skills/opscale-zh-cn`: Chinese skill.
-- `packages/cli`: command-line tool.
-- `packages/core`: SQL guardrails and dialect logic.
-- `packages/drivers`: database drivers.
+- `skills/opscale`: the single Opscale skill; it answers in the user's language.
+- `packages/cli`: the only npm package. SQL guardrails and database drivers live inside this package as internal modules.
 
 ## Release
 
-This repository uses Changesets. The current release prepares `0.1.0`.
+This repository uses Changesets. Release changes from `main` through GitHub Actions. See [docs/RELEASING.md](./docs/RELEASING.md).
 
 ```bash
 pnpm run verify
 pnpm changeset version
 git add .
-git commit -m "chore: prepare initial release"
+git commit -m "chore: prepare release"
 git push origin main
 ```
 

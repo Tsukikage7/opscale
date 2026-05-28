@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { DefaultSqlDriver } from "../src/index.js";
+import { DefaultSqlDriver } from "../../src/drivers/index.js";
 
 test("DefaultSqlDriver executes PostgreSQL queries through pg", async () => {
   const calls: Array<{ connectionString: string; sql: string }> = [];

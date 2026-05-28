@@ -1,6 +1,6 @@
 {
   "name": "opscale",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Command-line interface for Opscale.",
   "license": "MIT",
   "keywords": [
@@ -12,6 +12,13 @@
     "ai"
   ],
   "homepage": "https://github.com/Tsukikage7/opscale#readme",
+  "engines": {
+    "node": ">=22.13"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
   "bugs": {
     "url": "https://github.com/Tsukikage7/opscale/issues"
   },
@@ -31,15 +38,20 @@
   "scripts": {
     "clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\"",
     "build": "pnpm run clean && tsc -p tsconfig.json",
-    "test": "pnpm run build && node --test dist/test/*.test.js",
+    "test": "pnpm run build && node --test dist/test/*.test.js dist/test/core/*.test.js dist/test/drivers/*.test.js",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "opscale-core": "workspace:*",
-    "opscale-drivers": "workspace:*"
+    "mssql": "^12.5.4",
+    "mysql2": "^3.15.3",
+    "pg": "^8.16.3",
+    "sql.js": "^1.13.0"
   },
   "devDependencies": {
+    "@types/mssql": "^12.3.0",
     "@types/node": "^24.0.0",
+    "@types/pg": "^8.15.6",
+    "@types/sql.js": "^1.4.9",
     "typescript": "^5.9.0"
   }
 }

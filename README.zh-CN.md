@@ -22,29 +22,25 @@ English README: [README.md](./README.md)
 如果你希望 AI 帮你安装，直接对 AI 说：
 
 ```text
-帮我安装 Opscale 中文 Skill。安装后，查运营数据时都通过 Opscale 的只读流程执行。
+帮我安装 Opscale。安装后，查运营数据时都通过 Opscale 的只读流程执行。
 ```
 
 AI 应该执行：
 
 ```bash
-npx skills add Tsukikage7/opscale --skill opscale-zh-cn --agent codex --global --yes
+npx skills add Tsukikage7/opscale --skill opscale --agent codex --global --yes
 ```
 
 其他 AI 工具：
 
 ```bash
-npx skills add Tsukikage7/opscale --skill opscale-zh-cn --agent claude-code --global --yes
-npx skills add Tsukikage7/opscale --skill opscale-zh-cn --agent cursor --global --yes
-```
-
-英文版 Skill：
-
-```bash
-npx skills add Tsukikage7/opscale --skill opscale --agent codex --global --yes
+npx skills add Tsukikage7/opscale --skill opscale --agent claude-code --global --yes
+npx skills add Tsukikage7/opscale --skill opscale --agent cursor --global --yes
 ```
 
 如果只想安装到当前项目，去掉 `--global`。
+
+Opscale 只有一个 Skill。用户用中文问，AI 就用中文回答；用户用英文问，AI 就用英文回答。
 
 ## 安装 CLI
 
@@ -52,7 +48,7 @@ Opscale Skill 会调用 `opscale` CLI 来查数据库。不想全局安装时，
 
 ```bash
 npx opscale@latest drivers
-npx opscale@latest schema
+npx opscale@latest config init
 ```
 
 也可以全局安装：
@@ -60,24 +56,55 @@ npx opscale@latest schema
 ```bash
 npm install -g opscale
 opscale drivers
-opscale schema
+opscale config init
 ```
 
 ## 连接数据库
 
-请使用只读数据库账号。不要把生产数据库密码粘贴到聊天里，在你自己的终端或密钥管理工具里配置：
+请使用只读数据库账号。不要把生产数据库密码粘贴到聊天里。
+
+推荐做法是让用户在自己的终端里运行：
+
+```bash
+npx opscale@latest config init
+```
+
+它会在本机提示你填写：
+
+```text
+Database DSN
+Schemas
+Max rows
+Timeout ms
+```
+
+配置会保存到本机：
+
+```text
+~/.opscale/config.json
+```
+
+这个文件只在你的机器上。AI 不需要看到数据库密码。
+
+你可以查看脱敏后的配置：
+
+```bash
+npx opscale@latest config show
+```
+
+然后让 AI 确认能看到数据库结构：
+
+```bash
+npx opscale@latest schema
+```
+
+高级用户也可以继续用环境变量，环境变量会覆盖本地配置：
 
 ```bash
 export OPSCALE_DSN='postgres://readonly_user:password@host:5432/database?sslmode=require'
 export OPSCALE_SCHEMAS='public'
 export OPSCALE_MAX_ROWS='100'
 export OPSCALE_TIMEOUT_MS='10000'
-```
-
-然后让 AI 先确认能看到数据库结构：
-
-```bash
-npx opscale@latest schema
 ```
 
 ## 怎么使用
@@ -95,6 +122,14 @@ AI 会按这个流程执行：
 3. 生成只读 SQL。
 4. 执行查询。
 5. 返回结果、SQL 和可能的业务假设。
+
+如果 AI 发现还没有配置数据库，它应该让你在本地运行：
+
+```bash
+npx opscale@latest config init
+```
+
+而不是让你把数据库账号密码发给 AI。
 
 ## 能查哪些数据库
 
@@ -125,21 +160,18 @@ pnpm run verify
 
 仓库结构：
 
-- `skills/opscale`：英文 Skill。
-- `skills/opscale-zh-cn`：中文 Skill。
-- `packages/cli`：命令行工具。
-- `packages/core`：SQL 保护和方言逻辑。
-- `packages/drivers`：数据库驱动。
+- `skills/opscale`：唯一 Skill，按用户语言输出。
+- `packages/cli`：唯一 npm 包。SQL 保护和数据库驱动作为内部模块放在这个包里。
 
 ## 发布
 
-本仓库使用 Changesets。当前版本准备发布 `0.1.0`。
+本仓库使用 Changesets。`main` 分支通过 GitHub Actions 发布。维护者流程见 [docs/RELEASING.md](./docs/RELEASING.md)。
 
 ```bash
 pnpm run verify
 pnpm changeset version
 git add .
-git commit -m "chore: prepare initial release"
+git commit -m "chore: prepare release"
 git push origin main
 ```
 

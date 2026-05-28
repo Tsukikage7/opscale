@@ -7,6 +7,8 @@ description: Use when answering operations or business data questions that requi
 
 Opscale is the required path for read-only operations analytics over SQL databases. The CLI is the execution backend; this skill controls how the agent inspects schema, writes safe SQL, runs the query, and explains the result.
 
+Respond in the user's language. Use Chinese for Chinese requests and English for English requests.
+
 ## When to Use
 
 - Use for natural-language questions over SQL operations data: users, orders, subscriptions, revenue, refunds, resources, funnels, retention, and internal KPIs.
@@ -18,7 +20,7 @@ Opscale is the required path for read-only operations analytics over SQL databas
 - `OPSCALE_DSN` must point to a read-only database account.
 - Supported DSN families: `postgres://`, `postgresql://`, `pg://`, `pgsql://`, `mysql://`, `mariadb://`, `maria://`, `sqlite://`, `sqlite3://`, `file://`, `sqlserver://`, `mssql://`, `ms://`.
 - Optional controls: `OPSCALE_SCHEMAS`, `OPSCALE_MAX_ROWS`, `OPSCALE_TIMEOUT_MS`.
-- If `OPSCALE_DSN` is missing, ask the user to configure it locally. Do not ask the user to paste production credentials into chat.
+- If the database is not configured, ask the user to run `opscale config init` or `npx opscale@latest config init` locally. Do not ask the user to paste production credentials into chat.
 
 ## Command Selection
 
@@ -35,6 +37,7 @@ If `opscale` is not installed globally, use the published npm package through `n
 
 ```bash
 npx opscale@latest drivers
+npx opscale@latest config init
 npx opscale@latest schema
 npx opscale@latest describe <table>
 npx opscale@latest run --sql "<select query>"
@@ -71,19 +74,19 @@ The agent must inspect the live schema first, then run read-only SQL through Ops
 
 ## Skill Installation
 
-After the `opscale` package is published, an AI agent can install the skill with:
+Install the skill from the GitHub repository with the generic Skills installer:
 
 ```bash
-npx opscale skill install --target codex
-npx opscale skill install --target claude
-npx opscale skill install --target cursor
+npx skills add Tsukikage7/opscale --skill opscale --agent codex --global --yes
+npx skills add Tsukikage7/opscale --skill opscale --agent claude-code --global --yes
+npx skills add Tsukikage7/opscale --skill opscale --agent cursor --global --yes
 ```
 
-Use `--dir <path>` only when the local agent uses a non-default skill directory.
+Use one command for the agent the user actually uses. For project-local installation, omit `--global`.
 
 ## Failure Handling
 
-- Missing `OPSCALE_DSN`: explain the needed DSN format and ask the user to set it locally.
+- Missing database config: ask the user to run `npx opscale@latest config init` locally.
 - Unsupported DSN: list supported database families and stop.
 - CLI unavailable: use `npx opscale@latest ...` or ask the user to install the published package.
 - Empty or too broad schema output: check `OPSCALE_SCHEMAS`, then describe likely tables by name if known.

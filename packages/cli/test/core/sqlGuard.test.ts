@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { buildLimitedQuery, normalizeReadOnlySql } from "../src/index.js";
+import { buildLimitedQuery, normalizeReadOnlySql } from "../../src/core/index.js";
 
 test("normalizeReadOnlySql accepts SELECT and strips one trailing semicolon", () => {
   assert.equal(

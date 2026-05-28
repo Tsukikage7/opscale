@@ -1,4 +1,0 @@
-interface:
-  display_name: "Opscale 中文"
-  short_description: "面向 AI Agent 的只读 SQL 运营分析"
-  default_prompt: "使用 $opscale-zh-cn 查看数据库 schema，并用只读 SQL 回答一个运营指标问题。"

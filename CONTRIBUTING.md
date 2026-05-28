@@ -23,10 +23,10 @@ Use Node.js 22.13 or newer and pnpm 11.
 
 ## Tests
 
-Runtime changes should include tests close to the changed package:
+Runtime changes should include focused tests:
 
-- `packages/core/test` for SQL guard, dialect, and shared type behavior.
-- `packages/drivers/test` for database driver behavior.
+- `packages/cli/test/core` for SQL guard and dialect behavior.
+- `packages/cli/test/drivers` for database driver behavior.
 - `packages/cli/test` for configuration and CLI behavior.
 
 Run the full verification before opening a PR:

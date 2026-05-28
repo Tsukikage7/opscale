@@ -2,13 +2,12 @@
 
 Command-line interface for Opscale.
 
-The CLI is intentionally thin. It parses user commands, loads configuration, delegates SQL guardrails and dialect decisions to `opscale-core`, and queries databases through `opscale-drivers`.
+`opscale` is the only npm package. It includes the CLI, SQL guardrails, and Node.js database drivers in one install.
 
 AI agent skills are installed from the repository with the generic Skills installer:
 
 ```bash
 npx skills add Tsukikage7/opscale --skill opscale --agent codex --global --yes
-npx skills add Tsukikage7/opscale --skill opscale-zh-cn --agent codex --global --yes
 ```
 
 Supported query drivers:
@@ -22,6 +21,18 @@ Supported query drivers:
 
 ## Configuration
 
+Recommended local setup:
+
+```bash
+opscale config init
+opscale config show
+```
+
+The config is saved to `~/.opscale/config.json` with file mode `0600`. Passwords
+are redacted in `config show`.
+
+Environment variables are also supported and override the saved config:
+
 ```bash
 export OPSCALE_DSN='postgres://readonly_user:password@localhost:5432/app?sslmode=disable'
 export OPSCALE_SCHEMAS='public'
@@ -34,6 +45,8 @@ export OPSCALE_TIMEOUT_MS='10000'
 ```bash
 opscale doctor
 opscale drivers
+opscale config init
+opscale config show
 opscale schema
 opscale describe orders
 opscale run --sql "select status, count(*) from orders group by status"

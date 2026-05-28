@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { detectDialect, getDialectAdapter } from "../src/index.js";
+import { detectDialect, getDialectAdapter } from "../../src/core/index.js";
 
 test("detectDialect maps common DSN schemes", () => {
   assert.equal(detectDialect("postgres://u:p@localhost/db"), "postgres");
