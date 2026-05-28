@@ -17,10 +17,10 @@ importers:
 
   packages/cli:
     dependencies:
-      '@opscale/core':
+      opscale-core:
         specifier: workspace:*
         version: link:../core
-      '@opscale/drivers':
+      opscale-drivers:
         specifier: workspace:*
         version: link:../drivers
     devDependencies:
@@ -42,15 +42,15 @@ importers:
 
   packages/drivers:
     dependencies:
-      '@opscale/core':
-        specifier: workspace:*
-        version: link:../core
       mssql:
         specifier: ^12.5.4
         version: 12.5.4(@azure/core-client@1.10.1)
       mysql2:
         specifier: ^3.15.3
         version: 3.22.4(@types/node@24.12.4)
+      opscale-core:
+        specifier: workspace:*
+        version: link:../core
       pg:
         specifier: ^8.16.3
         version: 8.21.0

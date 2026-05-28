@@ -1,5 +1,5 @@
 {
-  "name": "@opscale/core",
+  "name": "opscale-core",
   "version": "0.1.0",
   "description": "Core SQL guardrails and dialect utilities for Opscale.",
   "license": "MIT",
@@ -21,7 +21,7 @@
   },
   "type": "module",
   "files": [
-    "dist",
+    "dist/src",
     "README.md"
   ],
   "exports": {

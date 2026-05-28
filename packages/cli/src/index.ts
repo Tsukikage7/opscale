@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-import { detectDialect, getDialectAdapter, normalizeReadOnlySql } from "@opscale/core";
-import { DefaultSqlDriver } from "@opscale/drivers";
+import { detectDialect, getDialectAdapter, normalizeReadOnlySql } from "opscale-core";
+import { DefaultSqlDriver } from "opscale-drivers";
 
 import { loadConfig, loadDriverConfig } from "./config.js";
 
@@ -170,6 +170,19 @@ Examples:
   opscale schema
   opscale describe orders
   opscale run --sql "select status, count(*) from orders group by status"
+
+AI AGENT SKILLS:
+  Opscale pairs with AI agent skills that teach Codex, Claude Code, Cursor,
+  and compatible tools how to inspect schema and run read-only SQL.
+
+  Install the English skill:
+    npx skills add Tsukikage7/opscale --skill opscale --agent codex --global --yes
+
+  Install the Chinese skill:
+    npx skills add Tsukikage7/opscale --skill opscale-zh-cn --agent codex --global --yes
+
+  List available skills:
+    npx skills add Tsukikage7/opscale --list
 `);
 }
 

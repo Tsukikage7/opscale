@@ -8,7 +8,7 @@ import {
   type QueryInput,
   type QueryResult,
   type SqlDriver,
-} from "@opscale/core";
+} from "opscale-core";
 import { readFile } from "node:fs/promises";
 import mssql from "mssql";
 import mysql from "mysql2/promise";

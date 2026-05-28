@@ -1,5 +1,5 @@
 {
-  "name": "@opscale/drivers",
+  "name": "opscale-drivers",
   "version": "0.1.0",
   "description": "Node.js database drivers for Opscale.",
   "license": "MIT",
@@ -23,7 +23,7 @@
   },
   "type": "module",
   "files": [
-    "dist",
+    "dist/src",
     "README.md"
   ],
   "exports": {
@@ -37,7 +37,7 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@opscale/core": "workspace:*",
+    "opscale-core": "workspace:*",
     "mssql": "^12.5.4",
     "mysql2": "^3.15.3",
     "pg": "^8.16.3",

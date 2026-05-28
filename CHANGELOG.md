@@ -2,12 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
-This project follows a lightweight changelog format until a formal release
-workflow is introduced.
-
-## Unreleased
+## 0.1.0
 
 - Added Node.js database drivers for PostgreSQL, MySQL/MariaDB, SQLite, and SQL Server.
 - Removed the external SQL client runner model.
-- Added bilingual README coverage.
+- Added English and Chinese AI agent skills installable through the generic `skills` installer.
+- Added bilingual README coverage based on an agent-native CLI layout.
 - Added initial open-source project metadata and GitHub templates.

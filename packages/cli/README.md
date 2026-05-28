@@ -1,8 +1,15 @@
-# @opscale/cli
+# opscale
 
 Command-line interface for Opscale.
 
-The CLI is intentionally thin. It parses user commands, loads configuration, delegates SQL guardrails and dialect decisions to `@opscale/core`, and queries databases through `@opscale/drivers`.
+The CLI is intentionally thin. It parses user commands, loads configuration, delegates SQL guardrails and dialect decisions to `opscale-core`, and queries databases through `opscale-drivers`.
+
+AI agent skills are installed from the repository with the generic Skills installer:
+
+```bash
+npx skills add Tsukikage7/opscale --skill opscale --agent codex --global --yes
+npx skills add Tsukikage7/opscale --skill opscale-zh-cn --agent codex --global --yes
+```
 
 Supported query drivers:
 
@@ -35,7 +42,7 @@ opscale run --sql "select status, count(*) from orders group by status"
 During development:
 
 ```bash
-pnpm --filter @opscale/cli build
+pnpm --filter opscale build
 node packages/cli/dist/src/index.js schema
 ```
 
@@ -45,18 +52,3 @@ node packages/cli/dist/src/index.js schema
 - `opscale run` accepts only `SELECT` and `WITH` SQL.
 - `opscale schema` uses dialect-specific introspection SQL.
 - `opscale run` currently supports PostgreSQL, MySQL/MariaDB, SQLite, and SQL Server through Node packages.
-
-## 中文说明
-
-这个包是 Opscale 的命令行入口。CLI 本身保持轻量，只负责解析命令、读取环境变量配置，并把 SQL 保护、方言判断和数据库查询交给 `@opscale/core` 与 `@opscale/drivers`。
-
-当前真实支持的查询驱动：
-
-| 数据库 | Node 包 |
-| --- | --- |
-| PostgreSQL | `pg` |
-| MySQL / MariaDB | `mysql2` |
-| SQLite | `sql.js` |
-| SQL Server | `mssql` |
-
-不支持 Redis、MongoDB、Oracle、ClickHouse、DuckDB、Snowflake、BigQuery、Elasticsearch 等未实现数据源。
