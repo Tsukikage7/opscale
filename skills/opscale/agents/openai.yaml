@@ -1,0 +1,4 @@
+interface:
+  display_name: "Opscale"
+  short_description: "Read-only SQL analytics for AI agents"
+  default_prompt: "Use $opscale to inspect the database schema and answer an operations metric question with read-only SQL."
