@@ -32,11 +32,7 @@ async function main(argv: string[]): Promise<void> {
       await runDrivers();
       return;
     case "install":
-      await runInstall({
-        agent: parseAgentTarget(getOptionalString(args.flags, "agent")),
-        global: !args.flags.has("project"),
-        dryRun: args.flags.has("dry-run"),
-      });
+      await runOnboarding(args.flags);
       return;
     case "config":
       await runConfig(args.positional, args.flags);
@@ -69,6 +65,45 @@ async function runDrivers(): Promise<void> {
   const config = loadDriverConfig();
   const driver = createDriver(config);
   printJSON(driver.drivers());
+}
+
+async function runOnboarding(flags: Map<string, string | boolean>): Promise<void> {
+  const dryRun = flags.has("dry-run");
+  const skipConfig = flags.has("skip-config");
+  const skipVerify = flags.has("skip-verify");
+
+  await runInstall({
+    agent: parseAgentTarget(getOptionalString(flags, "agent")),
+    global: !flags.has("project"),
+    dryRun,
+    skipSkill: flags.has("skip-skill"),
+  });
+
+  if (dryRun) {
+    printOnboardingNextStep();
+    return;
+  }
+
+  if (skipConfig) {
+    console.log("Skipping database config.");
+  } else if (hasConfiguredDsn()) {
+    console.log("Using existing database config.");
+  } else {
+    console.log("Configure a local read-only database.");
+    await runConfigInit(flags);
+  }
+
+  if (skipVerify) {
+    console.log("Skipping verification.");
+    printOnboardingNextStep();
+    return;
+  }
+
+  console.log("Checking database drivers...");
+  await runDrivers();
+  console.log("Checking schema access...");
+  await runSchema();
+  printOnboardingNextStep();
 }
 
 async function runConfig(positional: string[], flags: Map<string, string | boolean>): Promise<void> {
@@ -243,8 +278,21 @@ function parsePositiveIntFromInput(value: string, label: string): number {
   return parsed;
 }
 
+function hasConfiguredDsn(): boolean {
+  return Boolean(process.env.OPSCALE_DSN?.trim() || loadStoredConfig().dsn?.trim());
+}
+
+function printOnboardingNextStep(): void {
+  console.log(`
+Done.
+
+Now ask your AI agent:
+  Use Opscale to show revenue, paid orders, and refunds by day for the last 7 days.
+`);
+}
+
 function printUsage(): void {
-  console.log(`Opscale: AI-assisted operations analytics over SQL databases.
+  console.log(`Opscale: read-only product and operations analytics for AI agents.
 
 Environment:
   OPSCALE_DSN             Database DSN, preferably for a readonly account
@@ -253,7 +301,7 @@ Environment:
   OPSCALE_TIMEOUT_MS      Command timeout, default: 10000
 
 Commands:
-  install                 Install the Opscale Skill for an AI agent
+  install                 Install the Skill, configure a database, and verify setup
   doctor                  Check database driver availability
   schema [--table name]   Print dynamic table/column metadata as JSON
   describe <table>        Print one table's column metadata as JSON
@@ -263,24 +311,28 @@ Commands:
   config path             Print local config file path
 
 Examples:
-  opscale install --agent codex
+  opscale install
+  opscale install --project
   opscale config init
   opscale schema
   opscale describe orders
-  opscale run --sql "select status, count(*) from orders group by status"
+  opscale run --sql "select status, count(*) as orders from orders group by status"
 
 AI AGENT SKILLS:
-  For AI assistants, follow this order:
-    1. Pick the agent target: codex, claude-code, or cursor.
-    2. Install the Skill.
-    3. Ask the user to run config init locally.
-    4. Verify with drivers and schema.
+  Quick start:
+    npx opscale@latest install
 
-  Install the skill:
-    opscale install --agent codex
+  The install command:
+    1. installs the Opscale Skill using automatic AI tool detection;
+    2. asks the user to enter a read-only database DSN locally;
+    3. verifies drivers and schema access;
+    4. prints the first business question to ask.
 
-  Configure the database locally:
-    opscale config init
+  Advanced:
+    opscale install --agent cursor
+    opscale install --project
+    opscale install --skip-config
+    opscale install --skip-skill
 
   List available skills:
     npx skills add Tsukikage7/opscale --list

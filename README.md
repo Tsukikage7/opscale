@@ -7,90 +7,106 @@
 
 [中文版](./README.zh-CN.md) | English
 
-Opscale is an AI-native CLI and Skill for answering operations questions from SQL databases.
+Opscale lets product and operations teams ask business questions in plain language.
 
-It helps product, operations, and business teams ask questions like:
+Your AI agent inspects the real database schema, runs read-only SQL locally through Opscale, and returns the numbers, SQL, and assumptions you can verify.
+
+Ask questions like:
 
 ```text
-How many paid orders did we have each day over the last 7 days?
-Which products or channels are performing best this month?
-What was revenue by product category?
-Did refunds spike recently?
+How did revenue, paid orders, and refunds change over the last 7 days?
+Which products, categories, or channels contributed the most revenue this month?
+Where did users drop off in the signup-to-payment funnel?
+Which customer cohorts are retaining or purchasing again?
+Did any refund, cancellation, or failed-payment metric spike recently?
 ```
-
-Opscale makes the AI agent inspect the real database schema first, run read-only SQL through a local CLI, and return the result with the SQL and assumptions.
 
 ## Why Opscale?
 
-- Agent-native workflow: built for Codex, Claude Code, Cursor, and compatible AI tools.
-- Real schema first: the agent inspects live tables and columns before writing SQL.
-- Local credentials: database DSNs stay on the user's machine through `opscale config init`.
-- Read-only guardrails: `opscale run` only accepts `SELECT` and `WITH`.
-- One npm package: install and run `opscale`, with drivers included.
+- Built for AI agents: works with Codex, Claude Code, Cursor, and compatible AI tools.
+- Business-first workflow: maps broad operations questions into metrics, time ranges, filters, and groupings.
+- Real schema first: the agent checks live tables and columns before writing SQL.
+- Local credentials: database DSNs stay on your machine through `opscale config init`.
+- Read-only by default: `opscale run` accepts only `SELECT` and `WITH`.
+- One npm package: install and run `opscale`; SQL drivers are included.
 
 ## Quick Start
 
-### For AI Agents
-
-> This section is for AI assistants. Follow the steps in order. Only the database configuration step needs user input.
-
-Step 1 — Identify the agent target:
-
-| User's tool | `--agent` value |
-| --- | --- |
-| Codex | `codex` |
-| Claude Code | `claude-code` |
-| Cursor | `cursor` |
-
-Step 2 — Install the Opscale Skill:
+Ask your AI assistant, or run this in your terminal:
 
 ```bash
-npx opscale@latest install --agent codex
+npx opscale@latest install
 ```
 
-Step 3 — Ask the user to configure a read-only database locally:
+Opscale will:
 
-```bash
-npx opscale@latest config init
-```
+1. install the AI Skill for your agent;
+2. ask you to enter a read-only database DSN locally;
+3. verify database drivers and schema access;
+4. show the first question you can ask.
 
-Do not ask the user to paste DSNs, passwords, tokens, or production credentials into chat.
+Only enter the database DSN in your local terminal. Do not paste DSNs, passwords, tokens, or production credentials into AI chat.
 
-Step 4 — Verify the setup:
-
-```bash
-npx opscale@latest drivers
-npx opscale@latest schema
-```
-
-Step 5 — Use Opscale for the first question:
+Then ask:
 
 ```text
-Use Opscale to show paid orders by day for the last 7 days.
+Use Opscale to show revenue, paid orders, and refunds by day for the last 7 days.
 ```
 
-### For Human Users
+### Agent Skills
 
-You can use Opscale without a global install:
+Opscale uses the Skills installer to detect the current AI tool automatically. Use `--agent` only when you need to override detection:
+
+| User's tool | Command |
+| --- | --- |
+| Codex | `npx opscale@latest install --agent codex` |
+| Claude Code | `npx opscale@latest install --agent claude-code` |
+| Cursor | `npx opscale@latest install --agent cursor` |
+
+For a project-local Skill install:
 
 ```bash
-npx opscale@latest drivers
+npx opscale@latest install --project
+```
+
+### Manual Setup
+
+Use the lower-level commands when you want to control each step:
+
+```bash
+npx opscale@latest install --skip-config
 npx opscale@latest config init
+npx opscale@latest drivers
 npx opscale@latest schema
 ```
 
-Or install the CLI globally:
+Or install globally:
 
 ```bash
 npm install -g opscale
-opscale drivers
-opscale config init
-opscale schema
+opscale install
 ```
+
+## What You Can Ask
+
+Opscale is intentionally generic. It works with common product, operations, revenue, and customer data models.
+
+| Scenario | Example questions |
+| --- | --- |
+| Business trend | How did revenue, paid orders, active users, or refunds change recently? |
+| Product or offer performance | Which products, plans, categories, content items, or offers are driving results? |
+| Funnel | Where do users drop off between signup, activation, checkout, payment, or renewal? |
+| Retention | Which cohorts are coming back, purchasing again, or becoming inactive? |
+| Channel performance | Which channels, campaigns, sources, or partners bring the best users or revenue? |
+| Risk and exceptions | Did refunds, cancellations, failed payments, fraud flags, or support-related metrics spike? |
+
+Opscale does not require your tables to use these exact names. The AI agent must inspect your real schema and map these business concepts to available tables and columns.
 
 ## Configure A Database
 
-Use a read-only database account.
+The install command runs this step for you. Use it directly only when you want to reconfigure the database.
+
+Use a read-only database account. This is required for production data.
 
 ```bash
 npx opscale@latest config init
@@ -132,9 +148,9 @@ export OPSCALE_MAX_ROWS='100'
 export OPSCALE_TIMEOUT_MS='10000'
 ```
 
-## Ask A Question
+## How The Agent Should Work
 
-Ask the AI agent a concrete business question:
+Ask the AI agent a business question:
 
 ```text
 Use Opscale to show paid orders and revenue by day for the last 7 days.
@@ -142,11 +158,29 @@ Use Opscale to show paid orders and revenue by day for the last 7 days.
 
 The agent should:
 
-1. confirm the metric, filters, and time range;
-2. inspect the database schema;
-3. describe likely tables before joining them;
-4. run read-only SQL through `opscale run`;
-5. answer with the result, SQL, and assumptions.
+1. classify the question, such as trend, funnel, retention, cohort, ranking, or anomaly;
+2. confirm the metric, filters, time range, and grouping;
+3. inspect the database schema;
+4. describe likely fact and dimension tables before joining them;
+5. run read-only SQL through `opscale run`;
+6. return the answer first, then evidence, SQL, assumptions, and caveats.
+
+Expected answer shape:
+
+```text
+Answer
+- Key numbers and changes
+- Notable spikes, drops, or ranking changes
+
+Scope
+- Time range, filters, grouping, row count
+
+SQL
+- Query used
+
+Assumptions
+- Money unit, status meaning, timezone, soft deletes, and missing definitions
+```
 
 ## Supported Databases
 
@@ -162,7 +196,10 @@ Not currently supported: Redis, MongoDB, Oracle, ClickHouse, DuckDB, Snowflake, 
 ## Commands
 
 ```bash
-opscale install --agent codex
+opscale install
+opscale install --project
+opscale install --skip-config
+opscale install --skip-skill
 opscale doctor
 opscale drivers
 opscale config init
@@ -177,8 +214,9 @@ opscale run --sql "select status, count(*) from orders group by status"
 
 - Use a read-only database role.
 - Keep production DSNs out of chat, issues, screenshots, and logs.
-- Review AI-generated SQL before running it against sensitive data.
-- Treat money units, order statuses, soft deletes, and time fields as business assumptions unless verified.
+- Review AI-generated SQL before running it against sensitive or regulated data.
+- Keep results aggregated by default. Avoid exposing personally identifiable information unless explicitly needed and appropriate.
+- Treat money units, status meanings, soft deletes, and time fields as business assumptions unless verified.
 - Opscale's SQL guardrails are defense in depth, not a replacement for database permissions.
 
 ## Development
@@ -193,6 +231,7 @@ pnpm run verify
 Repository layout:
 
 - `skills/opscale`: the single Opscale Skill; it answers in the user's language.
+- `skills/opscale/references`: reusable workflow and metric guidance for product and operations analysis.
 - `packages/cli`: the only npm package. SQL guardrails and database drivers live inside this package as internal modules.
 
 Release notes and maintainer workflow are in [docs/RELEASING.md](./docs/RELEASING.md).

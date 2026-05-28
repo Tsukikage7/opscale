@@ -1,7 +1,7 @@
 {
   "name": "opscale",
   "version": "0.1.3",
-  "description": "Command-line interface for Opscale.",
+  "description": "Read-only operations analytics CLI and AI Skill for SQL databases.",
   "license": "MIT",
   "keywords": [
     "opscale",

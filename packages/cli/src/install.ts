@@ -3,18 +3,20 @@ import { spawn } from "node:child_process";
 export type AgentTarget = "codex" | "claude-code" | "cursor";
 
 export interface InstallOptions {
-  agent: AgentTarget;
+  agent?: AgentTarget;
   global: boolean;
   dryRun: boolean;
+  skipSkill: boolean;
 }
 
 const SKILL_SOURCE = "Tsukikage7/opscale";
 const SKILL_NAME = "opscale";
 
-export function parseAgentTarget(value: string | undefined): AgentTarget {
+export function parseAgentTarget(value: string | undefined): AgentTarget | undefined {
   switch (value) {
     case undefined:
     case "":
+      return undefined;
     case "codex":
       return "codex";
     case "claude":
@@ -39,10 +41,12 @@ export function buildSkillInstallArgs(options: InstallOptions): string[] {
     SKILL_SOURCE,
     "--skill",
     SKILL_NAME,
-    "--agent",
-    options.agent,
     "--yes",
   ];
+
+  if (options.agent) {
+    args.push("--agent", options.agent);
+  }
 
   if (options.global) {
     args.push("--global");
@@ -56,18 +60,22 @@ export function formatCommand(command: string, args: string[]): string {
 }
 
 export async function runInstall(options: InstallOptions): Promise<void> {
+  if (options.skipSkill) {
+    console.log("Skipping Skill install.");
+    return;
+  }
+
   const command = process.platform === "win32" ? "npm.cmd" : "npm";
   const args = buildSkillInstallArgs(options);
 
   if (options.dryRun) {
     console.log(formatCommand("npm", args));
-    printInstallNextSteps();
     return;
   }
 
-  console.log(`Installing Opscale Skill for ${options.agent}...`);
+  const target = options.agent ? ` for ${options.agent}` : "";
+  console.log(`Installing Opscale Skill${target}...`);
   await run(command, args);
-  printInstallNextSteps();
 }
 
 function run(command: string, args: string[]): Promise<void> {
@@ -82,20 +90,6 @@ function run(command: string, args: string[]): Promise<void> {
       reject(new Error(`${command} ${args.join(" ")} exited with code ${code}`));
     });
   });
-}
-
-function printInstallNextSteps(): void {
-  console.log(`
-Next steps:
-  1. Configure a read-only database locally:
-     npx opscale@latest config init
-
-  2. Verify schema access:
-     npx opscale@latest schema
-
-  3. Ask your AI agent:
-     Use Opscale to show paid orders by day for the last 7 days.
-`);
 }
 
 function quoteShellArg(value: string): string {
