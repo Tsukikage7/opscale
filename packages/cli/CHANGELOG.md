@@ -1,5 +1,11 @@
 # opscale
 
+## 0.1.2
+
+### Patch Changes
+
+- Add `opscale install` as a unified AI Skill installation entrypoint for Codex, Claude Code, and Cursor.
+
 ## 0.1.1
 
 ### Patch Changes

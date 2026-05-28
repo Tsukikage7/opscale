@@ -77,12 +77,12 @@ The agent must inspect the live schema first, then run read-only SQL through Ops
 Install the skill from the GitHub repository with the generic Skills installer:
 
 ```bash
-npx skills add Tsukikage7/opscale --skill opscale --agent codex --global --yes
-npx skills add Tsukikage7/opscale --skill opscale --agent claude-code --global --yes
-npx skills add Tsukikage7/opscale --skill opscale --agent cursor --global --yes
+npx opscale@latest install --agent codex
+npx opscale@latest install --agent claude-code
+npx opscale@latest install --agent cursor
 ```
 
-Use one command for the agent the user actually uses. For project-local installation, omit `--global`.
+Use one command for the agent the user actually uses. For project-local installation, add `--project`.
 
 ## Failure Handling
 

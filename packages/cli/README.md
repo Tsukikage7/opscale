@@ -7,7 +7,7 @@ Command-line interface for Opscale.
 AI agent skills are installed from the repository with the generic Skills installer:
 
 ```bash
-npx skills add Tsukikage7/opscale --skill opscale --agent codex --global --yes
+opscale install --agent codex
 ```
 
 Supported query drivers:
@@ -43,6 +43,7 @@ export OPSCALE_TIMEOUT_MS='10000'
 ## Commands
 
 ```bash
+opscale install --agent codex
 opscale doctor
 opscale drivers
 opscale config init

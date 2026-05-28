@@ -1,76 +1,88 @@
 # Opscale
 
+[![npm version](https://img.shields.io/npm/v/opscale.svg)](https://www.npmjs.com/package/opscale)
 [![CI](https://github.com/Tsukikage7/opscale/actions/workflows/ci.yml/badge.svg)](https://github.com/Tsukikage7/opscale/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 [![Node.js 22.13+](https://img.shields.io/badge/node-%3E%3D22.13-43853d.svg)](https://nodejs.org/)
 
-Opscale helps product, operations, and business teams ask questions about SQL data in plain language:
+[中文版](./README.zh-CN.md) | English
+
+Opscale is an AI-native CLI and Skill for answering operations questions from SQL databases.
+
+It helps product, operations, and business teams ask questions like:
 
 ```text
 How many paid orders did we have each day over the last 7 days?
-What was revenue by plan last month?
+Which regions sold the most VPS plans last month?
+What was revenue by plan?
 Did refunds spike recently?
-What is the signup-to-paid conversion rate?
 ```
 
-Instead of letting an AI assistant guess tables or write one-off database scripts, Opscale makes the agent inspect the real schema first, run read-only SQL through a CLI, and report the SQL and assumptions with the answer.
+Opscale makes the AI agent inspect the real database schema first, run read-only SQL through a local CLI, and return the result with the SQL and assumptions.
 
-中文文档: [README.zh-CN.md](./README.zh-CN.md)
+## Why Opscale?
 
-## Install With AI
+- Agent-native workflow: built for Codex, Claude Code, Cursor, and compatible AI tools.
+- Real schema first: the agent inspects live tables and columns before writing SQL.
+- Local credentials: database DSNs stay on the user's machine through `opscale config init`.
+- Read-only guardrails: `opscale run` only accepts `SELECT` and `WITH`.
+- One npm package: install and run `opscale`, with drivers included.
 
-Tell your AI assistant:
+## Quick Start
 
-```text
-Install the Opscale skill. After that, use Opscale's read-only workflow for operations data questions.
-```
+### For AI Agents
 
-The assistant should run:
+If you are an AI assistant helping a user install Opscale, use the guided installer:
 
 ```bash
-npx skills add Tsukikage7/opscale --skill opscale --agent codex --global --yes
+npx opscale@latest install --agent codex
 ```
 
-Other AI tools:
+Other supported agent targets:
 
 ```bash
-npx skills add Tsukikage7/opscale --skill opscale --agent claude-code --global --yes
-npx skills add Tsukikage7/opscale --skill opscale --agent cursor --global --yes
+npx opscale@latest install --agent claude-code
+npx opscale@latest install --agent cursor
 ```
 
-For project-local installation, omit `--global`.
-
-Opscale ships one skill. It answers in the user's language, so separate English
-and Chinese skill packages are not needed.
-
-## Install The CLI
-
-The skill calls the `opscale` CLI to query databases. Without a global install:
+Then ask the user to configure the database locally:
 
 ```bash
-npx opscale@latest drivers
 npx opscale@latest config init
 ```
 
-Or install it globally:
+Do not ask the user to paste database credentials into chat.
+
+### For Human Users
+
+You can use Opscale without a global install:
+
+```bash
+npx opscale@latest install --agent codex
+npx opscale@latest drivers
+npx opscale@latest config init
+npx opscale@latest schema
+```
+
+Or install the CLI globally:
 
 ```bash
 npm install -g opscale
+opscale install --agent codex
 opscale drivers
 opscale config init
+opscale schema
 ```
 
-## Connect A Database
+## Configure A Database
 
-Use a read-only database account. Do not paste production credentials into chat.
-
-Recommended setup:
+Use a read-only database account.
 
 ```bash
 npx opscale@latest config init
 ```
 
-The command prompts locally for:
+The command prompts for:
 
 ```text
 Database DSN
@@ -79,51 +91,25 @@ Max rows
 Timeout ms
 ```
 
-It saves the config on your machine:
+The config is saved locally:
 
 ```text
 ~/.opscale/config.json
 ```
 
-The AI assistant does not need to see your database password.
-
-You can inspect the saved config with the password redacted:
+Check the saved config with the password redacted:
 
 ```bash
 npx opscale@latest config show
 ```
 
-Then verify schema access:
+Verify schema access:
 
 ```bash
 npx opscale@latest schema
 ```
 
-## Use It
-
-Ask a concrete business question:
-
-```text
-Use the opscale skill to show daily paid order counts for the last 7 days.
-```
-
-The agent will:
-
-1. confirm the metric and time range;
-2. inspect database schema;
-3. write read-only SQL;
-4. run the query;
-5. return the result, SQL, and assumptions.
-
-If the database is not configured, the agent should ask you to run this locally:
-
-```bash
-npx opscale@latest config init
-```
-
-It should not ask you to paste database credentials into chat.
-
-Advanced users can still use environment variables. They override the local config:
+Environment variables are also supported and override the saved config:
 
 ```bash
 export OPSCALE_DSN='postgres://readonly_user:password@host:5432/database?sslmode=require'
@@ -131,6 +117,22 @@ export OPSCALE_SCHEMAS='public'
 export OPSCALE_MAX_ROWS='100'
 export OPSCALE_TIMEOUT_MS='10000'
 ```
+
+## Ask A Question
+
+Ask the AI agent a concrete business question:
+
+```text
+Use Opscale to show paid orders and revenue by day for the last 7 days.
+```
+
+The agent should:
+
+1. confirm the metric, filters, and time range;
+2. inspect the database schema;
+3. describe likely tables before joining them;
+4. run read-only SQL through `opscale run`;
+5. answer with the result, SQL, and assumptions.
 
 ## Supported Databases
 
@@ -141,17 +143,31 @@ export OPSCALE_TIMEOUT_MS='10000'
 | SQLite | `sqlite://`, `sqlite3://`, `file://` | Supported for local files |
 | SQL Server | `sqlserver://`, `mssql://`, `ms://` | Supported |
 
-Not currently supported: Redis, MongoDB, Oracle, ClickHouse, DuckDB, Snowflake,
-BigQuery, Elasticsearch.
+Not currently supported: Redis, MongoDB, Oracle, ClickHouse, DuckDB, Snowflake, BigQuery, Elasticsearch.
 
-## Safety
+## Commands
 
-- Use a read-only database account.
-- `opscale run` accepts only `SELECT` and `WITH` queries.
-- Query results are row-limited.
-- Business definitions such as money units, order statuses, soft deletes, and time fields must be confirmed from your project context.
+```bash
+opscale install --agent codex
+opscale doctor
+opscale drivers
+opscale config init
+opscale config show
+opscale config path
+opscale schema
+opscale describe orders
+opscale run --sql "select status, count(*) from orders group by status"
+```
 
-## For Developers
+## Security
+
+- Use a read-only database role.
+- Keep production DSNs out of chat, issues, screenshots, and logs.
+- Review AI-generated SQL before running it against sensitive data.
+- Treat money units, order statuses, soft deletes, and time fields as business assumptions unless verified.
+- Opscale's SQL guardrails are defense in depth, not a replacement for database permissions.
+
+## Development
 
 Requires Node.js 22.13+ and pnpm 11.
 
@@ -162,20 +178,7 @@ pnpm run verify
 
 Repository layout:
 
-- `skills/opscale`: the single Opscale skill; it answers in the user's language.
+- `skills/opscale`: the single Opscale Skill; it answers in the user's language.
 - `packages/cli`: the only npm package. SQL guardrails and database drivers live inside this package as internal modules.
 
-## Release
-
-This repository uses Changesets. Release changes from `main` through GitHub Actions. See [docs/RELEASING.md](./docs/RELEASING.md).
-
-```bash
-pnpm run verify
-pnpm changeset version
-git add .
-git commit -m "chore: prepare release"
-git push origin main
-```
-
-npm publishing is handled by the GitHub Actions release workflow after `NPM_TOKEN`
-is configured in repository secrets.
+Release notes and maintainer workflow are in [docs/RELEASING.md](./docs/RELEASING.md).

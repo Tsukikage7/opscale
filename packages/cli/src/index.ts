@@ -5,6 +5,7 @@ import { createInterface } from "node:readline/promises";
 
 import { detectDialect, getDialectAdapter, normalizeReadOnlySql } from "./core/index.js";
 import { DefaultSqlDriver } from "./drivers/index.js";
+import { parseAgentTarget, runInstall } from "./install.js";
 
 import { getConfigPath, loadConfig, loadDriverConfig, loadStoredConfig, redactDsn, saveStoredConfig } from "./config.js";
 
@@ -29,6 +30,13 @@ async function main(argv: string[]): Promise<void> {
       return;
     case "drivers":
       await runDrivers();
+      return;
+    case "install":
+      await runInstall({
+        agent: parseAgentTarget(getOptionalString(args.flags, "agent")),
+        global: !args.flags.has("project"),
+        dryRun: args.flags.has("dry-run"),
+      });
       return;
     case "config":
       await runConfig(args.positional, args.flags);
@@ -245,6 +253,7 @@ Environment:
   OPSCALE_TIMEOUT_MS      Command timeout, default: 10000
 
 Commands:
+  install                 Install the Opscale Skill for an AI agent
   doctor                  Check database driver availability
   schema [--table name]   Print dynamic table/column metadata as JSON
   describe <table>        Print one table's column metadata as JSON
@@ -254,6 +263,7 @@ Commands:
   config path             Print local config file path
 
 Examples:
+  opscale install --agent codex
   opscale config init
   opscale schema
   opscale describe orders
@@ -264,7 +274,7 @@ AI AGENT SKILLS:
   and compatible tools how to inspect schema and run read-only SQL.
 
   Install the skill:
-    npx skills add Tsukikage7/opscale --skill opscale --agent codex --global --yes
+    opscale install --agent codex
 
   List available skills:
     npx skills add Tsukikage7/opscale --list
