@@ -11,7 +11,7 @@ pnpm run typecheck
 pnpm test
 ```
 
-Use Node.js 20 or newer and pnpm 11.
+Use Node.js 22.13 or newer and pnpm 11.
 
 ## Change Guidelines
 

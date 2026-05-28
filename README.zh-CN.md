@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/Tsukikage7/opscale/actions/workflows/ci.yml/badge.svg)](https://github.com/Tsukikage7/opscale/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
-[![Node.js 20+](https://img.shields.io/badge/node-%3E%3D20-43853d.svg)](https://nodejs.org/)
+[![Node.js 22.13+](https://img.shields.io/badge/node-%3E%3D22.13-43853d.svg)](https://nodejs.org/)
 
 Opscale 让产品经理、运营和业务团队可以直接问数据库里的运营问题，例如：
 
@@ -115,6 +115,8 @@ AI 会按这个流程执行：
 - 金额单位、订单状态、软删除、时间字段等业务口径，需要由你的项目文档或 AI 查询过程确认。
 
 ## 给开发者
+
+需要 Node.js 22.13+ 和 pnpm 11。
 
 ```bash
 pnpm install

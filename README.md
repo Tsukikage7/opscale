@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/Tsukikage7/opscale/actions/workflows/ci.yml/badge.svg)](https://github.com/Tsukikage7/opscale/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
-[![Node.js 20+](https://img.shields.io/badge/node-%3E%3D20-43853d.svg)](https://nodejs.org/)
+[![Node.js 22.13+](https://img.shields.io/badge/node-%3E%3D22.13-43853d.svg)](https://nodejs.org/)
 
 Opscale helps product, operations, and business teams ask questions about SQL data in plain language:
 
@@ -117,6 +117,8 @@ BigQuery, Elasticsearch.
 - Business definitions such as money units, order statuses, soft deletes, and time fields must be confirmed from your project context.
 
 ## For Developers
+
+Requires Node.js 22.13+ and pnpm 11.
 
 ```bash
 pnpm install
