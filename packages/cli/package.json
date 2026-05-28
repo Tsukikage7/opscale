@@ -1,0 +1,45 @@
+{
+  "name": "@opscale/cli",
+  "version": "0.1.0",
+  "description": "Command-line interface for Opscale.",
+  "license": "MIT",
+  "keywords": [
+    "opscale",
+    "cli",
+    "sql",
+    "database",
+    "analytics",
+    "ai"
+  ],
+  "homepage": "https://github.com/Tsukikage7/opscale#readme",
+  "bugs": {
+    "url": "https://github.com/Tsukikage7/opscale/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tsukikage7/opscale.git",
+    "directory": "packages/cli"
+  },
+  "type": "module",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "bin": {
+    "opscale": "./dist/src/index.js"
+  },
+  "scripts": {
+    "clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\"",
+    "build": "pnpm run clean && tsc -p tsconfig.json",
+    "test": "pnpm run build && node --test dist/test/*.test.js",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@opscale/core": "workspace:*",
+    "@opscale/drivers": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^5.9.0"
+  }
+}

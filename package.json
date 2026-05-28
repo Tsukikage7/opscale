@@ -1,0 +1,21 @@
+{
+  "name": "opscale-workspace",
+  "version": "0.1.0",
+  "private": true,
+  "description": "AI-assisted operations analytics over SQL databases.",
+  "license": "MIT",
+  "packageManager": "pnpm@11.0.6",
+  "scripts": {
+    "build": "pnpm -r --filter './packages/*' build",
+    "clean": "pnpm -r --filter './packages/*' run clean",
+    "changeset": "changeset",
+    "test": "pnpm -r --filter './packages/*' test",
+    "typecheck": "pnpm run build && pnpm -r --filter './packages/*' typecheck",
+    "verify": "pnpm run clean && pnpm run build && pnpm run typecheck && pnpm test",
+    "version-packages": "changeset version"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.31.0",
+    "sql.js": "^1.14.1"
+  }
+}

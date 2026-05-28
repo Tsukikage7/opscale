@@ -1,0 +1,41 @@
+{
+  "name": "@opscale/core",
+  "version": "0.1.0",
+  "description": "Core SQL guardrails and dialect utilities for Opscale.",
+  "license": "MIT",
+  "keywords": [
+    "opscale",
+    "sql",
+    "database",
+    "analytics",
+    "ai"
+  ],
+  "homepage": "https://github.com/Tsukikage7/opscale#readme",
+  "bugs": {
+    "url": "https://github.com/Tsukikage7/opscale/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tsukikage7/opscale.git",
+    "directory": "packages/core"
+  },
+  "type": "module",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "exports": {
+    ".": "./dist/src/index.js"
+  },
+  "types": "./dist/src/index.d.ts",
+  "scripts": {
+    "clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\"",
+    "build": "pnpm run clean && tsc -p tsconfig.json",
+    "test": "pnpm run build && node --test dist/test/*.test.js",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^5.9.0"
+  }
+}
