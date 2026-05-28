@@ -1,5 +1,11 @@
 # opscale
 
+## 0.1.3
+
+### Patch Changes
+
+- Clarify the AI Agent installation flow in README files and CLI help output.
+
 ## 0.1.2
 
 ### Patch Changes

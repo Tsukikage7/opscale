@@ -270,11 +270,17 @@ Examples:
   opscale run --sql "select status, count(*) from orders group by status"
 
 AI AGENT SKILLS:
-  Opscale pairs with AI agent skills that teach Codex, Claude Code, Cursor,
-  and compatible tools how to inspect schema and run read-only SQL.
+  For AI assistants, follow this order:
+    1. Pick the agent target: codex, claude-code, or cursor.
+    2. Install the Skill.
+    3. Ask the user to run config init locally.
+    4. Verify with drivers and schema.
 
   Install the skill:
     opscale install --agent codex
+
+  Configure the database locally:
+    opscale config init
 
   List available skills:
     npx skills add Tsukikage7/opscale --list

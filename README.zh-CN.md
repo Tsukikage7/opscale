@@ -32,35 +32,48 @@ Opscale 会让 AI 先看真实数据库表结构，再通过本机 CLI 执行只
 
 ### 给 AI Agent
 
-如果你是 AI 助手，帮用户安装 Opscale 时，用统一安装入口。
+> 这一段是给 AI 助手看的。按顺序执行；只有配置数据库这一步需要用户参与。
 
-Codex：
+Step 1 — 判断用户正在用哪个 AI 工具：
+
+| 用户工具 | `--agent` 参数 |
+| --- | --- |
+| Codex | `codex` |
+| Claude Code | `claude-code` |
+| Cursor | `cursor` |
+
+Step 2 — 安装 Opscale Skill：
 
 ```bash
 npx opscale@latest install --agent codex
 ```
 
-Claude Code / Cursor：
-
-```bash
-npx opscale@latest install --agent claude-code
-npx opscale@latest install --agent cursor
-```
-
-然后让用户在本机终端配置数据库：
+Step 3 — 让用户在本机终端配置只读数据库：
 
 ```bash
 npx opscale@latest config init
 ```
 
-不要要求用户把数据库账号密码粘贴到聊天里。
+不要要求用户把 DSN、密码、token 或生产数据库凭证粘贴到聊天里。
+
+Step 4 — 验证安装和数据库连接：
+
+```bash
+npx opscale@latest drivers
+npx opscale@latest schema
+```
+
+Step 5 — 开始第一个问题：
+
+```text
+使用 Opscale 看一下最近 7 天每天的已支付订单数。
+```
 
 ### 给用户自己使用
 
 不想全局安装时，直接用：
 
 ```bash
-npx opscale@latest install --agent codex
 npx opscale@latest drivers
 npx opscale@latest config init
 npx opscale@latest schema
@@ -70,7 +83,6 @@ npx opscale@latest schema
 
 ```bash
 npm install -g opscale
-opscale install --agent codex
 opscale drivers
 opscale config init
 opscale schema

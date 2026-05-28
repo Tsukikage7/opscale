@@ -32,33 +32,48 @@ Opscale makes the AI agent inspect the real database schema first, run read-only
 
 ### For AI Agents
 
-If you are an AI assistant helping a user install Opscale, use the guided installer:
+> This section is for AI assistants. Follow the steps in order. Only the database configuration step needs user input.
+
+Step 1 — Identify the agent target:
+
+| User's tool | `--agent` value |
+| --- | --- |
+| Codex | `codex` |
+| Claude Code | `claude-code` |
+| Cursor | `cursor` |
+
+Step 2 — Install the Opscale Skill:
 
 ```bash
 npx opscale@latest install --agent codex
 ```
 
-Other supported agent targets:
-
-```bash
-npx opscale@latest install --agent claude-code
-npx opscale@latest install --agent cursor
-```
-
-Then ask the user to configure the database locally:
+Step 3 — Ask the user to configure a read-only database locally:
 
 ```bash
 npx opscale@latest config init
 ```
 
-Do not ask the user to paste database credentials into chat.
+Do not ask the user to paste DSNs, passwords, tokens, or production credentials into chat.
+
+Step 4 — Verify the setup:
+
+```bash
+npx opscale@latest drivers
+npx opscale@latest schema
+```
+
+Step 5 — Use Opscale for the first question:
+
+```text
+Use Opscale to show paid orders by day for the last 7 days.
+```
 
 ### For Human Users
 
 You can use Opscale without a global install:
 
 ```bash
-npx opscale@latest install --agent codex
 npx opscale@latest drivers
 npx opscale@latest config init
 npx opscale@latest schema
@@ -68,7 +83,6 @@ Or install the CLI globally:
 
 ```bash
 npm install -g opscale
-opscale install --agent codex
 opscale drivers
 opscale config init
 opscale schema
