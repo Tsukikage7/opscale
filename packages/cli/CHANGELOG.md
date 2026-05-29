@@ -1,5 +1,11 @@
 # opscale
 
+## 0.1.4
+
+### Patch Changes
+
+- Add HTML report guidance for product and operations analysis, including chart selection, self-contained rendering rules, and smart analysis sections.
+
 ## 0.1.3
 
 ### Patch Changes
