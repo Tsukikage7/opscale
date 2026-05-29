@@ -6,6 +6,8 @@ Read-only operations analytics CLI and AI Skill installer for Opscale.
 
 Use it when an AI agent needs to answer product, operations, revenue, funnel, retention, channel, or KPI questions from a SQL database without exposing credentials in chat.
 
+For product or operations stakeholders, the Skill should create a standalone HTML report with business conclusions, charts, smart analysis, and SQL in a collapsed technical appendix.
+
 AI agent skills are installed from the repository with the generic Skills installer:
 
 ```bash
@@ -76,4 +78,4 @@ node packages/cli/dist/src/index.js schema
 - `opscale run` accepts only `SELECT` and `WITH` SQL.
 - `opscale schema` uses dialect-specific introspection SQL.
 - `opscale run` currently supports PostgreSQL, MySQL/MariaDB, SQLite, and SQL Server through Node packages.
-- AI agents should answer with business results first, then scope, SQL, assumptions, and caveats.
+- AI agents should answer with business results first, then scope, SQL, assumptions, and caveats. For stakeholder-facing delivery, prefer a standalone HTML report with charts and smart analysis.

@@ -116,4 +116,4 @@ Answer in business language first:
 4. SQL used;
 5. assumptions, caveats, and missing definitions.
 
-Do not lead with schema dumps, raw JSON, or SQL unless the user asks for them.
+Do not lead with schema dumps, raw JSON, or SQL unless the user asks for them. When the result is meant for product or operations stakeholders, turn the same content into a standalone HTML report with metric cards, charts, smart analysis, a compact evidence table, scope, caveats, and a collapsed SQL appendix.

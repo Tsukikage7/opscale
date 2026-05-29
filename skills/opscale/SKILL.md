@@ -27,7 +27,9 @@ Do not use this skill for Redis, MongoDB, Elasticsearch, log-only analysis, writ
 - Prefer small aggregate queries over raw row dumps.
 - Convert vague operations questions into a concrete metric plan before querying.
 - State business assumptions when schema cannot prove them.
+- Add intelligent analysis: compare periods, identify spikes or drops, separate signal from uncertainty, and propose the next practical checks.
 - Put the answer first, then scope, evidence, SQL, assumptions, and caveats.
+- When the user wants a result for product or operations stakeholders, produce a standalone HTML report with charts unless they ask for another format.
 - Keep language business-friendly. Avoid making the user read SQL before the conclusion.
 
 ## Setup Workflow
@@ -100,10 +102,11 @@ For multi-table metrics, funnel/retention questions, revenue/refund calculations
 
 - `references/query-workflow.md`
 - `references/operations-metrics.md`
+- `references/html-report.md` when the result should be shared with product or operations stakeholders
 
 ## Output Contract
 
-Return in this order:
+For chat-only answers, return in this order:
 
 1. **Answer**: direct answer, key numbers, changes, ranking, spikes, or drops.
 2. **Scope**: time range, filters, grouping, and row count.
@@ -111,6 +114,8 @@ Return in this order:
 4. **SQL**: query used.
 5. **Assumptions and caveats**: money units, status meanings, soft deletes, timezone, chosen time fields, missing business definitions.
 6. **Next check**: only when it materially improves confidence.
+
+For a result intended for product or operations stakeholders, create a standalone `.html` report and give the user the file path. The report should contain the same content, but SQL belongs in a collapsed technical appendix so non-technical readers see the conclusion, metric cards, charts, scope, smart analysis, and caveats first. Use `references/html-report.md` for structure and style.
 
 Avoid returning large raw JSON blobs unless the user asks for raw output.
 

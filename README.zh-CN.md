@@ -163,7 +163,15 @@ AI 应该按这个流程执行：
 5. 通过 `opscale run` 执行只读 SQL。
 6. 先返回结论，再给证据、SQL、业务假设和限制。
 
-推荐回答结构：
+如果结果要给产品、运营或管理者看，推荐让 AI 生成一个独立 HTML 报告：
+
+```text
+使用 Opscale 分析最近 7 天的收入、订单和退款，并生成一个给运营看的 HTML 报告。
+```
+
+HTML 报告应该把结论、核心指标卡、图表、趋势表、智能分析、口径和风险放在前面，把 SQL 放到折叠的技术附录里。
+
+聊天内的快速回答可以用这个结构：
 
 ```text
 结论
@@ -229,7 +237,7 @@ pnpm run verify
 仓库结构：
 
 - `skills/opscale`：唯一 Skill，按用户语言输出。
-- `skills/opscale/references`：产品和运营分析的通用工作流与指标参考。
+- `skills/opscale/references`：产品和运营分析的通用工作流、指标参考和 HTML 报告规范。
 - `packages/cli`：唯一 npm 包。SQL 保护和数据库驱动作为内部模块放在这个包里。
 
 发布说明和维护者流程见 [docs/RELEASING.md](./docs/RELEASING.md)。

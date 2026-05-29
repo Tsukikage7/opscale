@@ -50,6 +50,7 @@ If a business definition is unclear, inspect project docs or code when available
 5. Revise from errors and schema output if needed.
 6. Summarize the result in business language.
 7. Show scope, SQL, and assumptions.
+8. If the result is for product or operations stakeholders, create a standalone HTML report with charts and smart analysis using `html-report.md`.
 
 ## Common Analysis Patterns
 

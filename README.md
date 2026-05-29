@@ -165,7 +165,15 @@ The agent should:
 5. run read-only SQL through `opscale run`;
 6. return the answer first, then evidence, SQL, assumptions, and caveats.
 
-Expected answer shape:
+When the result is meant for product, operations, or leadership stakeholders, ask the agent to create a standalone HTML report:
+
+```text
+Use Opscale to analyze revenue, orders, and refunds for the last 7 days, then create an HTML report for operations.
+```
+
+The HTML report should put the conclusion, metric cards, charts, evidence table, smart analysis, scope, and caveats first. SQL should go in a collapsed technical appendix.
+
+For quick chat answers, use this shape:
 
 ```text
 Answer
@@ -231,7 +239,7 @@ pnpm run verify
 Repository layout:
 
 - `skills/opscale`: the single Opscale Skill; it answers in the user's language.
-- `skills/opscale/references`: reusable workflow and metric guidance for product and operations analysis.
+- `skills/opscale/references`: reusable workflow, metric guidance, and HTML report guidance for product and operations analysis.
 - `packages/cli`: the only npm package. SQL guardrails and database drivers live inside this package as internal modules.
 
 Release notes and maintainer workflow are in [docs/RELEASING.md](./docs/RELEASING.md).
