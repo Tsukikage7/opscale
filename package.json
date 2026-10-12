@@ -16,6 +16,6 @@
   },
   "devDependencies": {
     "@changesets/cli": "^2.31.0",
-    "sql.js": "^1.14.1"
+    "sql.js": "^1.14.2"
   }
 }
