@@ -42,15 +42,15 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "mssql": "^12.7.0",
-    "mysql2": "^3.23.3",
-    "pg": "^8.23.0",
+    "mssql": "^12.7.4",
+    "mysql2": "^3.24.5",
+    "pg": "^8.23.1",
     "sql.js": "^1.14.2"
   },
   "devDependencies": {
     "@types/mssql": "^12.3.0",
-    "@types/node": "^26.2.0",
-    "@types/pg": "^8.21.0",
+    "@types/node": "^26.6.5",
+    "@types/pg": "^8.23.1",
     "@types/sql.js": "^1.4.9",
     "typescript": "^7.0.2"
   }
